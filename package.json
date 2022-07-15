@@ -1,0 +1,29 @@
+{
+  "name": "rockeet",
+  "version": "0.0.1-dev0",
+  "description": "Rockeet SDK",
+  "main": "rockeet.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rockeet-ai/node-sdk.git"
+  },
+  "keywords": [
+    "ai",
+    "iot",
+    "sdk"
+  ],
+  "author": "Philipp Scheer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rockeet-ai/node-sdk/issues"
+  },
+  "homepage": "https://github.com/rockeet-ai/node-sdk#readme",
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "node-fetch": "^2.6.7",
+    "request": "^2.88.2"
+  }
+}
