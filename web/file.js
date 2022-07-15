@@ -3,23 +3,15 @@ Copyright (c) 2022 Philipp Scheer
 */
 
 
-const fs = require("fs");
-const { endpoint, extractFileId, isLocalFile } = require("./_helper");
+const { endpoint, extractFileId } = require("./_helper");
 
 
 module.exports = {
-    upload: (pathOrReadStream) => {
+    upload: (file) => {
         return new Promise((resolve, reject) => {
-            if (typeof pathOrReadStream === 'string' || pathOrReadStream instanceof String) {
-                if (isLocalFile(pathOrReadStream)) {
-                    pathOrReadStream = fs.createReadStream(pathOrReadStream);
-                } else {
-                    reject("path is not a valid file");
-                }
-            }
-            endpoint("/file", {
-                file: pathOrReadStream
-            }, method="post", form=true).then(resolve).catch(reject);
+            const formData = new FormData();
+            formData.append("file", file);
+            endpoint("/file", formData, method="post", form=true).then(resolve).catch(reject);
         });
     },
     list: () => {
