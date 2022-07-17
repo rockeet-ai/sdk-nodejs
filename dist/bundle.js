@@ -503,4 +503,21 @@ module.exports = {
     setToken: require("./lib/_helper").setToken,
 }
 
-},{"./lib/_helper":1,"./lib/assistant":2,"./lib/audio":3,"./lib/file":4,"./lib/image":5,"./lib/video":6}]},{},[7]);
+},{"./lib/_helper":1,"./lib/assistant":2,"./lib/audio":3,"./lib/file":4,"./lib/image":5,"./lib/video":6}],8:[function(require,module,exports){
+/*
+Copyright (c) 2022 Philipp Scheer
+*/
+
+// Grab an existing namespace object, or create a blank object
+// if it doesn't exist
+var rockeet = window.rockeet || {};
+
+// Stick on the modules that need to be exported.
+// You only need to require the top-level modules, browserify
+// will walk the dependency graph and load everything correctly
+rockeet = require("./rockeet.js");
+
+// Replace/Create the global namespace
+window.rockeet = rockeet;
+
+},{"./rockeet.js":7}]},{},[8]);
