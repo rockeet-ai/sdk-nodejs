@@ -1,3 +1,3 @@
 # Rockeet SDK
 
-Nothing here yet.
+Still in development.

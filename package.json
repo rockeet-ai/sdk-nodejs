@@ -1,6 +1,6 @@
 {
   "name": "rockeet",
-  "version": "0.0.1-dev3",
+  "version": "0.0.1-dev10",
   "description": "Rockeet SDK",
   "main": "rockeet.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rockeet-ai/node-sdk.git"
+    "url": "git+https://github.com/rockeet-ai/sdk-nodejs.git"
   },
   "keywords": [
     "ai",
@@ -18,9 +18,9 @@
   "author": "Philipp Scheer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rockeet-ai/node-sdk/issues"
+    "url": "https://github.com/rockeet-ai/sdk-nodejs/issues"
   },
-  "homepage": "https://github.com/rockeet-ai/node-sdk#readme",
+  "homepage": "https://github.com/rockeet-ai/sdk-nodejs#readme",
   "dependencies": {
     "form-data": "^4.0.0",
     "node-fetch": "^2.6.7",

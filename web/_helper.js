@@ -50,33 +50,27 @@ module.exports = {
 
     endpoint(url, data, method="post", form=false, raw=false) {
         return new Promise((resolve, reject) => {
+            url = CONFIG.ROOT_URL + url;
             if (method.toLowerCase() == "get") {
-                return new Promise((resolve, reject) => {
-                    var oReq = new XMLHttpRequest();
-                    oReq.addEventListener("load", (ev) => { resolve(raw ? ev.currentTarget.response : JSON.parse(ev.currentTarget.responseText)) });
-                    oReq.open("GET", `${CONFIG.ROOT_URL}${url}`);
-                    oReq.setRequestHeader("Authorization", CONFIG.TOKEN);
-                    oReq.setRequestHeader("Content-Type", "application/json");
-                    oReq.send(JSON.stringify(data));
-                });
-            } else {
-                fetch(`${CONFIG.ROOT_URL}${url}`, {
-                    method: method,
-                    body: form ? data : JSON.stringify(data),
-                    headers: form ? { "Authorization": CONFIG.TOKEN } : {
-                        "Authorization": CONFIG.TOKEN,
-                        "Content-Type": "application/json"
-                    }
-                }).then(d => {
-                    if (raw) {
-                        resolve(d.arrayBuffer());
-                    } else {
-                        d.json().then(d => {
-                            resolve(new Response(d))
-                        }).catch(reject);
-                    }
-                }).catch(reject);
+                url += "?" + Object.entries(data).map(([key,value]) => encodeURIComponent(key) + "=" + encodeURIComponent(Array.isArray(value) ? JSON.stringify(value) : value)).join("&");
             }
+
+            fetch(url, {
+                method: method.toUpperCase(),
+                body: method.toLowerCase() === "get" ? undefined : (form ? data : JSON.stringify(data)),
+                headers: form ? { "Authorization": CONFIG.TOKEN } : {
+                    "Authorization": CONFIG.TOKEN,
+                    "Content-Type": "application/json"
+                }
+            }).then(d => {
+                if (raw) {
+                    resolve(d.arrayBuffer());
+                } else {
+                    d.json().then(d => {
+                        resolve(new Response(d))
+                    }).catch(reject);
+                }
+            }).catch(reject);
         });
     },
 
