@@ -53,7 +53,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             url = CONFIG.ROOT_URL + url;
             if (method.toLowerCase() == "get") {
-                url += "?" + Object.entries(data).map(([key,value]) => encodeURIComponent(key) + "=" + encodeURIComponent(Array.isArray(value) ? JSON.stringify(value) : value)).join("&");
+                url += "?" + Object.entries(data).map(([key,value]) => encodeURIComponent(key) + "=" + (Array.isArray(value) ? value.map(encodeURIComponent).join(",") : encodeURIComponent(value))).join("&");
             }
 
             fetch(url, {
@@ -68,7 +68,27 @@ module.exports = {
                     resolve(d.arrayBuffer());
                 } else {
                     d.json().then(d => {
-                        resolve(new Response(d))
+                        resolve(new Proxy(d, {
+                            get(target, name, receiver) {
+                                console.log(target, name, receiver, target.result, name);
+
+                                if (name === "result") return target.result;
+                                if (name === "success") return target.success;
+
+                                // if (name === "map") return target.result.map;
+                                // if (name === "forEach") return target.result.forEach;
+                                // if (name === "filter") return target.result.filter;
+                                // if (name === "reduce") return target.result.reduce;
+
+                                if (target.result.constructor == Object || Array.isArray(target.result)) {
+                                    if (Reflect.has(target.result, name)) {
+                                        return Reflect.get(target.result, name, receiver);
+                                    }
+                                } else {
+                                    return target.result;
+                                }
+                            }
+                        }));
                     }).catch(reject);
                 }
             }).catch(reject);
@@ -191,16 +211,10 @@ class Assistant {
                 }, "delete");
             },
             list: (expand=[]) => {
-                return new Promise((resolve, reject) => {
-                    endpoint(`/assistant/intents`, {
-                        assistantId: this.id,
-                        expand
-                    }, "get").then(d => {
-                        resolve(d.result);
-                    }).catch(er => {
-                        reject(er);
-                    });
-                })
+                return endpoint(`/assistant/intents`, {
+                    assistantId: this.id,
+                    expand
+                }, "get");
             },
 
             Utterance: {
@@ -220,16 +234,10 @@ class Assistant {
                     }, "delete");
                 },
                 list: (intentName) => {
-                    return new Promise((resolve, reject) => {
-                        endpoint(`/assistant/intent/utterance`, {
-                            assistantId: this.id,
-                            intentName
-                        }, "get").then(d => {
-                            resolve(d.result);
-                        }).catch(er => {
-                            reject(er);
-                        });
-                    })
+                    return endpoint(`/assistant/intent/utterance`, {
+                        assistantId: this.id,
+                        intentName
+                    }, "get");
                 }
             },
 
@@ -250,30 +258,18 @@ class Assistant {
                     }, "delete");
                 },
                 list: (intentName, expand=true) => {
-                    return new Promise((resolve, reject) => {
-                        endpoint(`/assistant/intent/slot`, {
-                            assistantId: this.id,
-                            intentName,
-                            expand
-                        }, "get").then(d => {
-                            resolve(d.result);
-                        }).catch(er => {
-                            reject(er);
-                        });
-                    })
+                    return endpoint(`/assistant/intent/slot`, {
+                        assistantId: this.id,
+                        intentName,
+                        expand
+                    }, "get");
                 }
             },
         }
     }
 
     static list() {
-        return new Promise((resolve, reject) => {
-            endpoint("/assistants", {}, "get").then(d => {
-                resolve(d.result);
-            }).catch(er => {
-                reject(er);
-            });
-        });
+        return endpoint("/assistants", {}, "get");
     }
 
 
