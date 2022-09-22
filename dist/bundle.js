@@ -7,7 +7,7 @@ Copyright (c) 2022 Philipp Scheer
 
 const CONFIG = {
     TOKEN: null,
-    ROOT_URL: "https://api.friday.fipsi.at/v1",
+    ROOT_URL: "https://api.rockeet.ai/v1",
 }
 
 
